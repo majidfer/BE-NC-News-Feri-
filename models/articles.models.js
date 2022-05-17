@@ -3,7 +3,7 @@ const db = require("../db/connection.js");
 exports.fetchArticle = (article_id) => {
   return db
     .query(
-      "SELECT articles.article_id, articles.title, articles.topic, users.username AS author, articles.body, articles.created_at, articles.votes FROM articles JOIN users ON users.username = articles.author WHERE articles.article_id = $1;",
+      "SELECT * FROM articles WHERE article_id = $1;",
       [article_id]
     )
     .then(({ rows }) => {
