@@ -13,13 +13,14 @@ afterAll(() => {
 beforeEach(() => seed(testData));
 
 describe("GET /api/topics", () => {
-  test("200: responds with an array of topic objects", () => {
+  test("200: responds with an object with a key of topics, and a value of the array full of topics.", () => {
     return request(app)
       .get("/api/topics")
       .expect(200)
       .then((res) => {
-        const topics = res.body;
+        const { topics } = res.body;
         expect(topics).toBeInstanceOf(Array);
+        expect(topics).not.toHaveLength(0);
         topics.forEach((topic) => {
           expect(topic).toMatchObject({
             slug: expect.any(String),
@@ -31,9 +32,9 @@ describe("GET /api/topics", () => {
 });
 
 describe("Error handling", () => {
-  test("404: responds with 400 error when received a request with invalid route(s)", () => {
+  test("404: responds with 404 error when received a request with invalid route(s)", () => {
     return request(app)
-      .get("/")
+      .get("/*")
       .expect(404)
       .then((res) => {
         const { message } = res.body;
