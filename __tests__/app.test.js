@@ -31,14 +31,48 @@ describe("GET /api/topics", () => {
   });
 });
 
+describe("GET /api/articles/:article_id", () => {
+  test("200: responds with an article object according to passed article_id", () => {
+    return request(app)
+      .get("/api/articles/3")
+      .expect(200)
+      .then(({ body }) => {
+        expect(body.article).toEqual({
+          article_id: 3,
+          title: "Eight pug gifs that remind me of mitch",
+          topic: "mitch",
+          author: "icellusedkars",
+          body: "some gifs",
+          created_at: "2020-11-03T09:12:00.000Z",
+          votes: 0,
+        });
+      });
+  });
+  test("400: responds with a bad request message when passed invalid article_id", () => {
+    return request(app)
+      .get("/api/articles/mystery")
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Bad request");
+      });
+  });
+  test("404: responds with a not found message when article is not in the database", () => {
+    return request(app)
+      .get("/api/articles/999999")
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Article not found");
+      });
+  });
+});
+
 describe("Error handling", () => {
   test("404: responds with 404 error when received a request with invalid route(s)", () => {
     return request(app)
-      .get("/*")
+      .get("/apl")
       .expect(404)
-      .then((res) => {
-        const { message } = res.body;
-        expect(message).toBe("Route not found");
+      .then(({ body }) => {
+        expect(body.msg).toBe("Route not found");
       });
   });
 });
