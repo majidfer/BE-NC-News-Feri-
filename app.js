@@ -17,12 +17,10 @@ app.patch("/api/articles/:article_id", patchArticle);
 
 // Handling PSQL error
 app.use((err, req, res, next) => {
-  if (err.code === "22P02") {
+  if (err.code === "22P02" || err.code === "23502") {
     res
       .status(400)
-      .send({ msg: "Bad request, please provide valid input type" });
-  } else if (err.code === "23502") {
-    res.status(400).send({ msg: "Bad request, please provide valid input" });
+      .send({ msg: "Bad request, please provide valid input" });
   } else {
     next(err);
   }
