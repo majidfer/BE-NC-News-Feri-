@@ -53,7 +53,7 @@ describe("GET /api/articles/:article_id", () => {
       .get("/api/articles/mystery")
       .expect(400)
       .then(({ body }) => {
-        expect(body.msg).toBe("Bad request, please provide valid input type");
+        expect(body.msg).toBe("Bad request, please provide valid input");
       });
   });
   test("404: responds with a not found message when article is not in the database", () => {
@@ -105,7 +105,7 @@ describe("PATCH /api/articles/:article_id", () => {
       .send(requestVote)
       .expect(400)
       .then(({ body }) => {
-        expect(body.msg).toBe("Bad request, please provide valid input type");
+        expect(body.msg).toBe("Bad request, please provide valid input");
       });
   });
   test("400: responds with a bad request message when passed invalid article_id", () => {
@@ -117,7 +117,7 @@ describe("PATCH /api/articles/:article_id", () => {
       .send(requestVote)
       .expect(400)
       .then(({ body }) => {
-        expect(body.msg).toBe("Bad request, please provide valid input type");
+        expect(body.msg).toBe("Bad request, please provide valid input");
       });
   });
   test("404: responds with a not found message when article is not in the database", () => {
