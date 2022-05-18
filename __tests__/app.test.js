@@ -57,7 +57,7 @@ describe("GET /api/articles/:article_id", () => {
       .then(({ body }) => {
         expect(body.article).toEqual(
           expect.objectContaining({
-            total_comments: 11
+            comment_count: 11
           })
         );
       });
