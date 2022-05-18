@@ -53,7 +53,7 @@ describe("GET /api/articles/:article_id", () => {
       .get("/api/articles/mystery")
       .expect(400)
       .then(({ body }) => {
-        expect(body.msg).toBe("Bad request, please provide valid input type");
+        expect(body.msg).toBe("Bad request, please provide valid input");
       });
   });
   test("404: responds with a not found message when article is not in the database", () => {
@@ -105,7 +105,7 @@ describe("PATCH /api/articles/:article_id", () => {
       .send(requestVote)
       .expect(400)
       .then(({ body }) => {
-        expect(body.msg).toBe("Bad request, please provide valid input type");
+        expect(body.msg).toBe("Bad request, please provide valid input");
       });
   });
   test("400: responds with a bad request message when passed invalid article_id", () => {
@@ -117,7 +117,7 @@ describe("PATCH /api/articles/:article_id", () => {
       .send(requestVote)
       .expect(400)
       .then(({ body }) => {
-        expect(body.msg).toBe("Bad request, please provide valid input type");
+        expect(body.msg).toBe("Bad request, please provide valid input");
       });
   });
   test("404: responds with a not found message when article is not in the database", () => {
@@ -130,6 +130,25 @@ describe("PATCH /api/articles/:article_id", () => {
       .expect(404)
       .then(({ body }) => {
         expect(body.msg).toBe("Article not found");
+      });
+  });
+});
+
+describe("GET /api/users", () => {
+  test("200: responds with an object with a key of users, and a value of the array full of users.", () => {
+    return request(app)
+      .get("/api/users")
+      .expect(200)
+      .then(({ body }) => {
+        expect(body.users).toBeInstanceOf(Array);
+        expect(body.users).not.toHaveLength(0);
+        body.users.forEach((user) => {
+          expect(user).toMatchObject({
+            username: expect.any(String),
+            name: expect.any(String),
+            avatar_url: expect.any(String),
+          });
+        });
       });
   });
 });
