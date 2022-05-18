@@ -31,6 +31,35 @@ describe("GET /api/topics", () => {
   });
 });
 
+describe("GET /api/articles", () => {
+  test("200: responds with an articles array of article objects (sorted by date in descending order)", () => {
+    return request(app)
+      .get("/api/articles")
+      .expect(200)
+      .then(({ body }) => {
+        expect(body.articles).toBeInstanceOf(Array);
+        expect(body.articles).not.toHaveLength(0);
+        expect(body.articles).toBeSortedBy("created_at", {
+          descending: true,
+        });
+        body.articles.forEach((article) => {
+          expect(article).toEqual(
+            expect.objectContaining({
+              article_id: expect.any(Number),
+              title: expect.any(String),
+              topic: expect.any(String),
+              author: expect.any(String),
+              body: expect.any(String),
+              created_at: expect.any(String),
+              votes: expect.any(Number),
+              comment_count: expect.any(Number),
+            })
+          );
+        });
+      });
+  });
+});
+
 describe("GET /api/articles/:article_id", () => {
   test("200: responds with an article object according to passed article_id", () => {
     return request(app)
@@ -39,13 +68,13 @@ describe("GET /api/articles/:article_id", () => {
       .then(({ body }) => {
         expect(body.article).toEqual(
           expect.objectContaining({
-              article_id: 3,
-              title: "Eight pug gifs that remind me of mitch",
-              topic: "mitch",
-              author: "icellusedkars",
-              body: "some gifs",
-              created_at: "2020-11-03T09:12:00.000Z",
-              votes: 0
+            article_id: 3,
+            title: "Eight pug gifs that remind me of mitch",
+            topic: "mitch",
+            author: "icellusedkars",
+            body: "some gifs",
+            created_at: "2020-11-03T09:12:00.000Z",
+            votes: 0,
           })
         );
       });
@@ -57,7 +86,7 @@ describe("GET /api/articles/:article_id", () => {
       .then(({ body }) => {
         expect(body.article).toEqual(
           expect.objectContaining({
-            comment_count: 11
+            comment_count: 11,
           })
         );
       });
