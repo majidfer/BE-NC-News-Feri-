@@ -3,14 +3,8 @@ const db = require("../db/connection.js");
 exports.fetchArticle = (article_id) => {
   const queryStr = `
   SELECT 
-    articles.article_id,
-    articles.title,
-    articles.topic,
-    articles.author,
-    articles.body,
-    articles.created_at,
-    articles.votes,
-    COUNT(comment_id)::int AS total_comments
+    articles.*,
+    COUNT(comment_id)::int AS comment_count
   FROM
     articles
   LEFT JOIN comments
