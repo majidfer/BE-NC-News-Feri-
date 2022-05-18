@@ -53,12 +53,80 @@ describe("GET /api/articles/:article_id", () => {
       .get("/api/articles/mystery")
       .expect(400)
       .then(({ body }) => {
-        expect(body.msg).toBe("Bad request");
+        expect(body.msg).toBe("Bad request, please provide valid input type");
       });
   });
   test("404: responds with a not found message when article is not in the database", () => {
     return request(app)
       .get("/api/articles/999999")
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Article not found");
+      });
+  });
+});
+
+describe("PATCH /api/articles/:article_id", () => {
+  test("200: responds with the updated article object", () => {
+    const requestVote = {
+      inc_votes: 10,
+    };
+    return request(app)
+      .patch("/api/articles/3")
+      .send(requestVote)
+      .expect(200)
+      .then(({ body }) => {
+        expect(body.updatedArticle).toEqual({
+          article_id: 3,
+          title: "Eight pug gifs that remind me of mitch",
+          topic: "mitch",
+          author: "icellusedkars",
+          body: "some gifs",
+          created_at: "2020-11-03T09:12:00.000Z",
+          votes: 10,
+        });
+      });
+  });
+  test("400: responds with a bad request message when no inc_votes passed", () => {
+    return request(app)
+      .patch("/api/articles/3")
+      .send()
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Bad request, please provide valid input");
+      });
+  });
+  test("400: responds with a bad request message when passed invalid inc_votes", () => {
+    const requestVote = {
+      inc_votes: "woohooo!",
+    };
+    return request(app)
+      .patch("/api/articles/3")
+      .send(requestVote)
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Bad request, please provide valid input type");
+      });
+  });
+  test("400: responds with a bad request message when passed invalid article_id", () => {
+    const requestVote = {
+      inc_votes: 10,
+    };
+    return request(app)
+      .patch("/api/articles/mystery")
+      .send(requestVote)
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Bad request, please provide valid input type");
+      });
+  });
+  test("404: responds with a not found message when article is not in the database", () => {
+    const requestVote = {
+      inc_votes: 10,
+    };
+    return request(app)
+      .patch("/api/articles/999999")
+      .send(requestVote)
       .expect(404)
       .then(({ body }) => {
         expect(body.msg).toBe("Article not found");
