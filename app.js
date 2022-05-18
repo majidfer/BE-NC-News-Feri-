@@ -4,6 +4,7 @@ const {
   getArticle,
   patchArticle,
 } = require("./controllers/articles.controllers.js");
+const { getUsers } = require("./controllers/users.controllers.js");
 
 const app = express();
 
@@ -11,13 +12,17 @@ app.use(express.json());
 
 app.get("/api/topics", getTopics);
 app.get("/api/articles/:article_id", getArticle);
+app.get("/api/users", getUsers);
 app.patch("/api/articles/:article_id", patchArticle);
 
+// Handling PSQL error
 app.use((err, req, res, next) => {
   if (err.code === "22P02") {
-    res.status(400).send({ msg: "Bad request, please provide valid input type" });
-  } else if (err.code === "23502")  {
-    res.status(400).send({ msg: "Bad request, please provide valid input"});
+    res
+      .status(400)
+      .send({ msg: "Bad request, please provide valid input type" });
+  } else if (err.code === "23502") {
+    res.status(400).send({ msg: "Bad request, please provide valid input" });
   } else {
     next(err);
   }
