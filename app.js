@@ -32,8 +32,10 @@ app.get("/api/users", getUsers);
 
 // Handling PSQL error
 app.use((err, req, res, next) => {
-  if (err.code === "22P02" || err.code === "23502" || err.code === "23503") {
+  if (err.code === "22P02" || err.code === "23502") {
     res.status(400).send({ msg: "Bad request, please provide valid input" });
+  } else if (err.code === "23503") {
+    res.status(404).send({ msg: "Request parameter not found"});
   } else {
     next(err);
   }
