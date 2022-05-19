@@ -3,7 +3,12 @@ const db = require("../db/connection.js");
 exports.fetchArticles = () => {
   const queryStr = `
   SELECT 
-    articles.*,
+    articles.article_id,
+    articles.title,
+    articles.topic,
+    articles.author,
+    articles.created_at,
+    articles.votes,
     COUNT(comment_id)::int AS comment_count
   FROM
     articles
