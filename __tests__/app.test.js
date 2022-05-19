@@ -145,12 +145,13 @@ describe("GET /api/articles/:article_id/comments", () => {
         expect(body.msg).toBe("Article not found");
       });
   });
-  test("404: responds with a not found message when article is valid but has no comments", () => {
+  test("200: responds with an empty array when article is valid but has no comments", () => {
     return request(app)
       .get("/api/articles/4/comments")
-      .expect(404)
+      .expect(200)
       .then(({ body }) => {
-        expect(body.msg).toBe("Comments not found");
+        expect(body.comments).toBeInstanceOf(Array);
+        expect(body.comments).toHaveLength(0);
       });
   });
 });
