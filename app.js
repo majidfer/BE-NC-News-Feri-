@@ -6,16 +6,25 @@ const {
   patchArticle,
 } = require("./controllers/articles.controllers.js");
 const { getUsers } = require("./controllers/users.controllers.js");
+const { getComments } = require("./controllers/comments.controllers.js");
 
 const app = express();
 
 app.use(express.json());
 
+// Topics route
 app.get("/api/topics", getTopics);
+
+// Articles route
 app.get("/api/articles", getArticles);
 app.get("/api/articles/:article_id", getArticle);
-app.get("/api/users", getUsers);
 app.patch("/api/articles/:article_id", patchArticle);
+
+// Comments route
+app.get("/api/articles/:article_id/comments", getComments);
+
+// Users route
+app.get("/api/users", getUsers);
 
 // Handling PSQL error
 app.use((err, req, res, next) => {
