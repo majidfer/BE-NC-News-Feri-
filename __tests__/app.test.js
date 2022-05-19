@@ -179,7 +179,7 @@ describe("POST /api/articles/:article_id/comments", () => {
         );
       });
   });
-  test("400: responds with a bad request message when passed invalid article_id", () => {
+  test("400: responds with a bad request message when passed invalid article_id type", () => {
     const newComment = {
       username: "rogersop",
       body: "This is another comment from rogersop for unknown article",
@@ -202,7 +202,7 @@ describe("POST /api/articles/:article_id/comments", () => {
       .send(newComment)
       .expect(404)
       .then(({ body }) => {
-        expect(body.msg).toBe("Request parameter not found");
+        expect(body.msg).toBe("Username not found");
       });
   });
   test("400: responds with a bad request message when passed invalid username type", () => {
@@ -213,9 +213,9 @@ describe("POST /api/articles/:article_id/comments", () => {
     return request(app)
       .post("/api/articles/4/comments")
       .send(newComment)
-      .expect(404)
+      .expect(400)
       .then(({ body }) => {
-        expect(body.msg).toBe("Request parameter not found");
+        expect(body.msg).toBe("Invalid username type");
       });
   });
   test("404: responds with a not found message when article is not in the database", () => {
@@ -228,7 +228,7 @@ describe("POST /api/articles/:article_id/comments", () => {
       .send(newComment)
       .expect(404)
       .then(({ body }) => {
-        expect(body.msg).toBe("Request parameter not found");
+        expect(body.msg).toBe("Article not found");
       });
   });
   test("400: responds with a bad request message when passed no username/body", () => {
@@ -238,7 +238,7 @@ describe("POST /api/articles/:article_id/comments", () => {
       .send(newComment)
       .expect(400)
       .then(({ body }) => {
-        expect(body.msg).toBe("Bad request, please provide valid input");
+        expect(body.msg).toBe("Username/comment body is empty");
       });
   });
 });
