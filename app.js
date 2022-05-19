@@ -34,8 +34,14 @@ app.get("/api/users", getUsers);
 app.use((err, req, res, next) => {
   if (err.code === "22P02" || err.code === "23502") {
     res.status(400).send({ msg: "Bad request, please provide valid input" });
-  } else if (err.code === "23503") {
-    res.status(404).send({ msg: "Request parameter not found"});
+  } else if (
+    err.code === "23503" &&
+    err.constraint === "comments_author_fkey"
+  ) {
+    res.status(404).send({ msg: "Username not found" });
+  } else if (err.code === "23503" &&
+  err.constraint === "comments_article_id_fkey") {
+    res.status(404).send({ msg: "Article not found"});
   } else {
     next(err);
   }
