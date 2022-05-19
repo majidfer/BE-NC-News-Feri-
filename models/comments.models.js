@@ -23,6 +23,12 @@ exports.fetchComments = (article_id) => {
 };
 
 exports.postComment = (article_id, username, body) => {
+  if (username === undefined || body === undefined) {
+    return Promise.reject({ status: 400, msg: "Username/comment body is empty"})
+  }
+  if (typeof username !== "string") {
+    return Promise.reject({ status: 400, msg: "Invalid username type"})
+  }
   const queryStr = `
         INSERT INTO comments (body, article_id, author)
         VALUES ($1, $2, $3)
