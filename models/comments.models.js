@@ -1,4 +1,5 @@
 const db = require("../db/connection.js");
+const { fetchUsers } = require("../models/users.models.js");
 
 exports.fetchComments = (article_id) => {
   const queryStr = `
@@ -23,9 +24,9 @@ exports.fetchComments = (article_id) => {
 
 exports.postComment = (article_id, username, body) => {
   const queryStr = `
-  INSERT INTO comments (body, article_id, author)
-  VALUES ($1, $2, $3)
-  RETURNING *;`
+        INSERT INTO comments (body, article_id, author)
+        VALUES ($1, $2, $3)
+        RETURNING *;`;
   return db.query(queryStr, [body, article_id, username]).then(({ rows }) => {
     return rows[0];
   });

@@ -6,6 +6,6 @@ exports.getUsers = (req, res, next) => {
     res.status(200).send({ users });
     })
     .catch((err) => {
-        next(err);
+      next(err);
     });
 };
