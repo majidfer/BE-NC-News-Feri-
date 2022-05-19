@@ -169,9 +169,12 @@ describe("POST /api/articles/:article_id/comments", () => {
       .then(({ body }) => {
         expect(body.newComment).toEqual(
           expect.objectContaining({
+            comment_id: expect.any(Number),
             body: "This is a new comment for article_id 1",
             author: "rogersop",
             article_id: 1,
+            votes: expect.any(Number),
+            created_at: expect.any(String),
           })
         );
       });
@@ -189,17 +192,17 @@ describe("POST /api/articles/:article_id/comments", () => {
         expect(body.msg).toBe("Bad request, please provide valid input");
       });
   });
-  test("400: responds with a bad request message when passed invalid username", () => {
+  test("404: responds with a not found message when passed invalid username", () => {
     const newComment = {
       username: "gandalf",
-      body: "This is a gandalf comment for article_id 4",
+      body: "This is a gandalf comment for article_id 1",
     };
     return request(app)
       .post("/api/articles/1/comments")
       .send(newComment)
-      .expect(400)
+      .expect(404)
       .then(({ body }) => {
-        expect(body.msg).toBe("Bad request, please provide valid input")
+        expect(body.msg).toBe("Request parameter not found");
       });
   });
   test("400: responds with a bad request message when passed invalid username type", () => {
@@ -208,14 +211,14 @@ describe("POST /api/articles/:article_id/comments", () => {
       body: "This is a gandalf comment for article_id 4",
     };
     return request(app)
-      .post("/api/articles/1/comments")
+      .post("/api/articles/4/comments")
       .send(newComment)
-      .expect(400)
+      .expect(404)
       .then(({ body }) => {
-        expect(body.msg).toBe("Bad request, please provide valid input")
+        expect(body.msg).toBe("Request parameter not found");
       });
   });
-  test("400: responds with a not found message when article is not in the database", () => {
+  test("404: responds with a not found message when article is not in the database", () => {
     const newComment = {
       username: "rogersop",
       body: "This is another comment from rogersop",
@@ -223,9 +226,19 @@ describe("POST /api/articles/:article_id/comments", () => {
     return request(app)
       .post("/api/articles/999999/comments")
       .send(newComment)
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Request parameter not found");
+      });
+  });
+  test("400: responds with a bad request message when passed no username/body", () => {
+    const newComment = {};
+    return request(app)
+      .post("/api/articles/4/comments")
+      .send(newComment)
       .expect(400)
       .then(({ body }) => {
-        expect(body.msg).toBe("Bad request, please provide valid input")
+        expect(body.msg).toBe("Bad request, please provide valid input");
       });
   });
 });
