@@ -16,7 +16,7 @@ exports.fetchComments = (article_id) => {
     if (rows.length === 0) {
       return Promise.reject({ status: 404, msg: "Article not found" });
     } else if (rows[0].comment_id === null) {
-      return Promise.reject({ status: 404, msg: "Comments not found" });
+      return [];
     } else return rows;
   });
 };
