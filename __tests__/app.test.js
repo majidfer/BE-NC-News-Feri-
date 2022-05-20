@@ -326,7 +326,7 @@ describe("DELETE /api/comments/:comment_id", () => {
         expect(body.msg).toBe("Bad request, please provide valid input");
       });
   });
-  test("404: responds with bad request message when passed invalid comment_id data type", () => {
+  test("404: responds with not found message when passed invalid comment_id", () => {
     const commentId = 99999;
     return request(app)
       .delete(`/api/comments/${commentId}`)
