@@ -67,19 +67,6 @@ describe("GET /api/articles", () => {
         expect(body.articles).toBeSortedBy("title", {
           ascending: true,
         });
-        body.articles.forEach((article) => {
-          expect(article).toEqual(
-            expect.objectContaining({
-              article_id: expect.any(Number),
-              title: expect.any(String),
-              topic: expect.any(String),
-              author: expect.any(String),
-              created_at: expect.any(String),
-              votes: expect.any(Number),
-              comment_count: expect.any(Number),
-            })
-          );
-        });
       });
   });
   test("200: responds with an articles array of article objects which sorted by any valid column and default descending order when passed invalid order", () => {
@@ -125,13 +112,7 @@ describe("GET /api/articles", () => {
         body.articles.forEach((article) => {
           expect(article).toEqual(
             expect.objectContaining({
-              article_id: expect.any(Number),
-              title: expect.any(String),
               topic: "mitch",
-              author: expect.any(String),
-              created_at: expect.any(String),
-              votes: expect.any(Number),
-              comment_count: expect.any(Number),
             })
           );
         });
