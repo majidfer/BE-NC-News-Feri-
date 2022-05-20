@@ -57,6 +57,64 @@ describe("GET /api/articles", () => {
         });
       });
   });
+  test("200: responds with an articles array of article objects which sorted by any valid column", () => {
+    return request(app)
+      .get("/api/articles?sort_by=title&order=asc")
+      .expect(200)
+      .then(({ body }) => {
+        expect(body.articles).toBeInstanceOf(Array);
+        expect(body.articles).not.toHaveLength(0);
+        expect(body.articles).toBeSortedBy("title", {
+          ascending: true,
+        });
+        body.articles.forEach((article) => {
+          expect(article).toEqual(
+            expect.objectContaining({
+              article_id: expect.any(Number),
+              title: expect.any(String),
+              topic: expect.any(String),
+              author: expect.any(String),
+              created_at: expect.any(String),
+              votes: expect.any(Number),
+              comment_count: expect.any(Number),
+            })
+          );
+        });
+      });
+  });
+  test("200: responds with an articles array of article objects which sorted by any valid column and default descending order when passed invalid order", () => {
+    return request(app)
+      .get("/api/articles?sort_by=article_id&order=random")
+      .expect(200)
+      .then(({ body }) => {
+        expect(body.articles).toBeInstanceOf(Array);
+        expect(body.articles).not.toHaveLength(0);
+        expect(body.articles).toBeSortedBy("article_id", {
+          descending: true,
+        });
+        body.articles.forEach((article) => {
+          expect(article).toEqual(
+            expect.objectContaining({
+              article_id: expect.any(Number),
+              title: expect.any(String),
+              topic: expect.any(String),
+              author: expect.any(String),
+              created_at: expect.any(String),
+              votes: expect.any(Number),
+              comment_count: expect.any(Number),
+            })
+          );
+        });
+      });
+  });
+  test("400: responds with bad request message when passed invalid sort_by", () => {
+    return request(app)
+      .get("/api/articles?sort_by=oranges")
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Bad request, please provide valid input");
+      });
+  });
 });
 
 describe("GET /api/articles/:article_id", () => {
