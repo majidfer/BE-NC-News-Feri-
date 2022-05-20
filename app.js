@@ -1,4 +1,5 @@
 const express = require("express");
+const { getEndpoints } = require("./controllers/api.controllers.js");
 const { getTopics } = require("./controllers/topics.controllers.js");
 const {
   getArticle,
@@ -21,6 +22,8 @@ const {
 const app = express();
 
 app.use(express.json());
+
+app.get("/api", getEndpoints);
 
 // Topic routes
 app.get("/api/topics", getTopics);
