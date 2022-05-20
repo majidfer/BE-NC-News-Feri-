@@ -312,6 +312,31 @@ describe("POST /api/articles/:article_id/comments", () => {
   });
 });
 
+describe("DELETE /api/comments/:comment_id", () => {
+  test("204: responds with no content message when passed valid comment_id", () => {
+    const commentId = 3;
+    return request(app).delete(`/api/comments/${commentId}`).expect(204);
+  });
+  test("400: responds with bad request message when passed invalid comment_id data type", () => {
+    const commentId = "myComment";
+    return request(app)
+      .delete(`/api/comments/${commentId}`)
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Bad request, please provide valid input");
+      });
+  });
+  test("404: responds with bad request message when passed invalid comment_id data type", () => {
+    const commentId = 99999;
+    return request(app)
+      .delete(`/api/comments/${commentId}`)
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Comment not found");
+      });
+  });
+});
+
 describe("PATCH /api/articles/:article_id", () => {
   test("200: responds with the updated article object", () => {
     const requestVote = {
