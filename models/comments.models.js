@@ -1,4 +1,5 @@
 const db = require("../db/connection.js");
+const { fetchUsers } = require("../models/users.models.js");
 
 exports.fetchComments = (article_id) => {
   const queryStr = `
@@ -18,5 +19,21 @@ exports.fetchComments = (article_id) => {
     } else if (rows[0].comment_id === null) {
       return [];
     } else return rows;
+  });
+};
+
+exports.postComment = (article_id, username, body) => {
+  if (username === undefined || body === undefined) {
+    return Promise.reject({ status: 400, msg: "Username/comment body is empty"})
+  }
+  if (typeof username !== "string") {
+    return Promise.reject({ status: 400, msg: "Invalid username type"})
+  }
+  const queryStr = `
+        INSERT INTO comments (body, article_id, author)
+        VALUES ($1, $2, $3)
+        RETURNING *;`;
+  return db.query(queryStr, [body, article_id, username]).then(({ rows }) => {
+    return rows[0];
   });
 };

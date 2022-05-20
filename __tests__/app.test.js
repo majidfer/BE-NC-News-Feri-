@@ -156,6 +156,93 @@ describe("GET /api/articles/:article_id/comments", () => {
   });
 });
 
+describe("POST /api/articles/:article_id/comments", () => {
+  test("201: responds with the newly posted comment for the given article_id when passed a valid article_id and a comment object", () => {
+    const newComment = {
+      username: "rogersop",
+      body: "This is a new comment for article_id 1",
+    };
+    return request(app)
+      .post("/api/articles/1/comments")
+      .send(newComment)
+      .expect(201)
+      .then(({ body }) => {
+        expect(body.newComment).toEqual(
+          expect.objectContaining({
+            comment_id: expect.any(Number),
+            body: "This is a new comment for article_id 1",
+            author: "rogersop",
+            article_id: 1,
+            votes: expect.any(Number),
+            created_at: expect.any(String),
+          })
+        );
+      });
+  });
+  test("400: responds with a bad request message when passed invalid article_id type", () => {
+    const newComment = {
+      username: "rogersop",
+      body: "This is another comment from rogersop for unknown article",
+    };
+    return request(app)
+      .post("/api/articles/mystery/comments")
+      .send(newComment)
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Bad request, please provide valid input");
+      });
+  });
+  test("404: responds with a not found message when passed invalid username", () => {
+    const newComment = {
+      username: "gandalf",
+      body: "This is a gandalf comment for article_id 1",
+    };
+    return request(app)
+      .post("/api/articles/1/comments")
+      .send(newComment)
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Username not found");
+      });
+  });
+  test("400: responds with a bad request message when passed invalid username type", () => {
+    const newComment = {
+      username: 1,
+      body: "This is a gandalf comment for article_id 4",
+    };
+    return request(app)
+      .post("/api/articles/4/comments")
+      .send(newComment)
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Invalid username type");
+      });
+  });
+  test("404: responds with a not found message when article is not in the database", () => {
+    const newComment = {
+      username: "rogersop",
+      body: "This is another comment from rogersop",
+    };
+    return request(app)
+      .post("/api/articles/999999/comments")
+      .send(newComment)
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Article not found");
+      });
+  });
+  test("400: responds with a bad request message when passed no username/body", () => {
+    const newComment = {};
+    return request(app)
+      .post("/api/articles/4/comments")
+      .send(newComment)
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Username/comment body is empty");
+      });
+  });
+});
+
 describe("PATCH /api/articles/:article_id", () => {
   test("200: responds with the updated article object", () => {
     const requestVote = {
