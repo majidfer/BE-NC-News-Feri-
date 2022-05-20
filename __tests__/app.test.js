@@ -12,6 +12,21 @@ afterAll(() => {
 
 beforeEach(() => seed(testData));
 
+describe("GET /api", () => {
+  test("200: responds with JSON describing all the available endpoints on this API", () => {
+    return request(app)
+      .get("/api")
+      .expect(200)
+      .then(({ body }) => {
+        expect(body.endpoints).toBeInstanceOf(Object);
+        expect(Object.keys(body.endpoints)).toHaveLength(9);
+        expect(body.endpoints["GET /api"].description).toBe(
+          "serves up a json representation of all the available endpoints of the api"
+        );
+      });
+  });
+});
+
 describe("GET /api/topics", () => {
   test("200: responds with an object with a key of topics, and a value of the array full of topics.", () => {
     return request(app)
