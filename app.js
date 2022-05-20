@@ -9,6 +9,7 @@ const { getUsers } = require("./controllers/users.controllers.js");
 const {
   getComments,
   addComment,
+  getCommentToDelete,
 } = require("./controllers/comments.controllers.js");
 const {
   PSQLErrorHandler,
@@ -32,6 +33,7 @@ app.patch("/api/articles/:article_id", patchArticle);
 // Comment routes
 app.get("/api/articles/:article_id/comments", getComments);
 app.post("/api/articles/:article_id/comments", addComment);
+app.delete("/api/comments/:comment_id", getCommentToDelete);
 
 // User routes
 app.get("/api/users", getUsers);
