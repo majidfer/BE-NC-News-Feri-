@@ -1,6 +1,6 @@
 const db = require("../db/connection.js");
 
-exports.fetchArticles = (sort_by = "created_at", order = "desc") => {
+exports.fetchArticles = (sort_by = "created_at", order = "desc", topic) => {
   const validSortBy = [
     "article_id",
     "title",
@@ -11,6 +11,9 @@ exports.fetchArticles = (sort_by = "created_at", order = "desc") => {
     "votes",
   ];
   const validOrder = ["asc", "ASC", "desc", "DESC"];
+  // const validTopics = 
+  const topicVal = [];
+  
   let queryStr = `
   SELECT 
     articles.article_id,
@@ -19,21 +22,30 @@ exports.fetchArticles = (sort_by = "created_at", order = "desc") => {
     articles.author,
     articles.created_at,
     articles.votes,
-    COUNT(comment_id)::int AS comment_count
-  FROM
-    articles
+  COUNT(comment_id)::int AS comment_count
+  FROM articles
   LEFT JOIN comments
-  ON articles.article_id = comments.article_id
-  GROUP BY articles.article_id`;
+  ON articles.article_id = comments.article_id`;
+
+  if (topic) {
+    queryStr += ` WHERE topic = $1 
+                  GROUP BY articles.article_id`;
+    topicVal.push(topic);
+  } else {
+    queryStr += ` GROUP BY articles.article_id`;
+  }
 
   if (validSortBy.includes(sort_by)) {
     queryStr += ` ORDER BY ${sort_by}`;
     if (validOrder.includes(order)) {
       queryStr += ` ${order}`;
     } else queryStr += ` DESC`;
-  } else return Promise.reject({ status: 400, msg: "Bad request, please provide valid input"});
-
-  return db.query(queryStr).then(({ rows }) => {
+  } else
+    return Promise.reject({
+      status: 400,
+      msg: "Bad request, please provide valid input",
+    });
+  return db.query(queryStr, topicVal).then(({ rows }) => {
     return rows;
   });
 };
