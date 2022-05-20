@@ -11,7 +11,7 @@ exports.fetchArticles = (sort_by = "created_at", order = "desc", topic) => {
     "votes",
   ];
   const validOrder = ["asc", "ASC", "desc", "DESC"];
-  // const validTopics = 
+  
   const topicVal = [];
   
   let queryStr = `
