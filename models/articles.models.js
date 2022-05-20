@@ -28,12 +28,11 @@ exports.fetchArticles = (sort_by = "created_at", order = "desc", topic) => {
   ON articles.article_id = comments.article_id`;
 
   if (topic) {
-    queryStr += ` WHERE topic = $1 
-                  GROUP BY articles.article_id`;
+    queryStr += ` WHERE topic = $1`;
     topicVal.push(topic);
-  } else {
-    queryStr += ` GROUP BY articles.article_id`;
-  }
+  } 
+  
+  queryStr += ` GROUP BY articles.article_id`;
 
   if (validSortBy.includes(sort_by)) {
     queryStr += ` ORDER BY ${sort_by}`;
