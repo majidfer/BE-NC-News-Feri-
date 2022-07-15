@@ -16,7 +16,7 @@ Link to the hosted version : https://nc-news-feri.herokuapp.com/api
     `npm i`
 
 3. Seed local database <br>
-    `npm run setup-dbs`
+    `npm run setup-dbs` <br>
     `npm run seed`
 
 4. Run tests <br>
