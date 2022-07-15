@@ -18,9 +18,11 @@ const {
   routeErrorHandler,
   internalServerErrorHandler,
 } = require("./controllers/errors.controllers.js");
+const cors = require('cors');
 
 const app = express();
 
+app.use(cors());
 app.use(express.json());
 
 app.get("/api", getEndpoints);
