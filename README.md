@@ -4,7 +4,7 @@ The purpose of this API is to provide information about news in form of articles
 
 ## Hosted version
 
-Link to the hosted version : https://nc-news-feri.herokuapp.com/api
+Link to the hosted version : https://be-nc-news-cvii.onrender.com/api
 
 ## Instructions
 
